@@ -1,0 +1,29 @@
+name: Deploy Laravel Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'  # Sesuaikan dengan versi PHP yang kamu gunakan
+    - name: Install Composer dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader --no-dev
+    - name: Copy .env file
+      run: cp .env.example .env
+    - name: Generate Laravel key
+      run: php artisan key:generate
+    - name: Run database migrations
+      run: php artisan migrate --force
+    ```
+
+Konfigurasi di atas akan menjalankan migrasi database setiap kali ada perubahan yang di-push ke branch `main`.
+
